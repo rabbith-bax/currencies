@@ -5,13 +5,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class SortedNumbers implements Serializable {
-    private List<Integer> numbers;
+public class NBPResponse {
+    private String table;
+    private String no;
+    private Date effectiveDate;
+    private List<Rate> rates;
 }
