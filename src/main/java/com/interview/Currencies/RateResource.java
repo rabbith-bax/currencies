@@ -2,11 +2,13 @@ package com.interview.Currencies;
 
 import com.google.gson.Gson;
 import com.interview.Currencies.model.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,19 +29,21 @@ public class RateResource {
     @PostMapping("/numbers/sort-command")
     public ResponseEntity<SortedNumbers> sortNumbers(@RequestBody SortedNumberRequest request) {
         List<Integer> numbers = request.getNumbers();
-        boolean ascending = request.isAscending();
+        String ascending = request.getOrder();
 
-        if (ascending) {
+        if (ascending.equals("asc")) {
             numbers.sort(Comparator.naturalOrder());
-        } else {
+        } else if (ascending.equals("desc")) {
             numbers.sort(Comparator.reverseOrder());
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong string for assertions");
         }
 
         return ResponseEntity.ok(new SortedNumbers(numbers));
     }
 
     @PostMapping("/currencies/get-current-currency-value-command")
-    public ResponseEntity<Double> getCurrencyRate(@RequestBody RateRequest request) throws IOException{
+    public ResponseEntity<Double> getCurrencyRate(@RequestBody RateRequest request) throws IOException {
         String currencyCode = request.getCode();
         List<Rate> rates = Arrays
                 .stream(getNBPResponse())
