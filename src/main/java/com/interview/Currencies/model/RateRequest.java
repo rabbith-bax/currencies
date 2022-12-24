@@ -11,5 +11,4 @@ import lombok.Setter;
 @Setter
 public class RateRequest {
     private String code;
-
 }
